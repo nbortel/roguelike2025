@@ -85,7 +85,7 @@ def generate_dungeon(
         new_room = RectangularRoom(x, y, room_width, room_height)
 
         # Run thorught the other rooms and see if they intersect with this one
-        if any(new_room.intersects(other_room) for other room in rooms):
+        if any(new_room.intersects(other_room) for other_room in rooms):
             continue # This room intersects, so go to the next attempt
         # If there are no intersections then the room is valid
 
