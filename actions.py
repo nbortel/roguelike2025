@@ -32,7 +32,7 @@ class MovementAction(Action):
         self.dx = dx
         self.dy = dy
 
-    def perform, self, engine: Engine, entity: Entity) -> None:
+    def perform(self, engine: Engine, entity: Entity) -> None:
         dest_x = entity.x + self.dx
         dest_y = entity.y + self.dy
 
