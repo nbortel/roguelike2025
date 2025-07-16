@@ -31,6 +31,6 @@ def generate_dungeon(map_width, map_height) -> GameMap:
     room_2 = RectangularRoom(x=35, y=15, width=10, height=15)
 
     dungeon.tiles[room_1.inner] = tile_types.floor
-    dungeon_tiles[room_2.inner] = tile_types.floor
+    dungeon.tiles[room_2.inner] = tile_types.floor
 
     return dungeon
