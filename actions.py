@@ -67,7 +67,7 @@ class BumpAction(ActionWithDirection):
         dest_x = entity.x + self.dx
         dest_y = entity.y + self.dy
 
-        if engine.game_map.get_blocking_entity at location(dest_x, dest_y):
+        if engine.game_map.get_blocking_entity_at_location(dest_x, dest_y):
             return MeleeAction(self.dx, self.dy).perform(engine, entity)
         else:
             return MovementAction(self.dx, self.dy).perform(engine, entity)
