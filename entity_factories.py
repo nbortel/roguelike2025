@@ -19,7 +19,7 @@ orc = Actor(
 )
 
 troll = Actor(
-    char="T"
+    char="T",
     color=(0, 127, 0),
     name="Troll",
     ai_cls=HostileEnemy,
