@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from typing import Optional, Tuple, TYPE_CHECKING
 
+import color
+
 if TYPE_CHECKING:
     from engine import Engine
     from entity import Actor, Entity
@@ -69,17 +71,27 @@ class MeleeAction(ActionWithDirection):
     def perform(self) -> None:
         target = self.target_actor
         if not target:
-            return # No entity to attach.
+            return  # No entity to attach.
 
         damage = self.entity.fighter.power - target.fighter.defense
 
         attack_desc = f"{self.entity.name.capitalize()} attacks {target.name}"
+        if self.entity is self.engine.player:
+            attack_color = color.player_atk
+        else:
+            attack_color = color.enemy_atk
 
         if damage > 0:
-            print(f"{attack_desc} for {damage} hit points.")
+            self.engine.message_log.add_message(
+                    f"{attack_desc} for {damage} hit points.",
+                    attack_color
+            )
             target.fighter.hp -= damage
         else:
-            print(f"{attack_desc} but does no damage.")
+            self.engine.message_log.add_message(
+                    f"{attack_desc} but does no damage.",
+                    attack_color
+            )
 
 
 class MovementAction(ActionWithDirection):
@@ -87,11 +99,11 @@ class MovementAction(ActionWithDirection):
         dest_x, dest_y = self.dest_xy
 
         if not self.engine.game_map.in_bounds(dest_x, dest_y):
-            return # Destination is out of bounds
+            return  # Destination is out of bounds
         if not self.engine.game_map.tiles["walkable"][dest_x, dest_y]:
-            return # Destination is blocked by a tile
+            return  # Destination is blocked by a tile
         if self.engine.game_map.get_blocking_entity_at_location(dest_x, dest_y):
-            return # Destination is blocked by an entity
+            return  # Destination is blocked by an entity
 
         self.entity.move(self.dx, self.dy)
 
