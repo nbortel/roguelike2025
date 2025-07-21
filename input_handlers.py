@@ -6,8 +6,7 @@ import tcod.event
 
 import actions
 from actions import (
-        Action, EscapeAction,
-        BumpAction, WaitAction,
+        Action, BumpAction, WaitAction,
         PickupAction
 )
 import color
@@ -225,7 +224,7 @@ class MainGameEventHandler(EventHandler):
         elif key in WAIT_KEYS:
             action = WaitAction(player)
         elif key == tcod.event.KeySym.ESCAPE:
-            action = EscapeAction(player)
+            raise SystemExit()
         elif key == tcod.event.KeySym.V:
             self.engine.event_handler = HistoryViewer(self.engine)
         elif key == tcod.event.KeySym.G:
