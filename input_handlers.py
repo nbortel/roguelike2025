@@ -228,19 +228,22 @@ class SelectIndexHandler(AskUserEventHandler):
         """Highlight the tile under the cursor."""
         super().on_render(console)
         x, y = self.engine.mouse_location
-        console.tiles_rgb["bg"][x, y] = color.white
-        console.tiles_rgb["fg"][x, y] = color.black
+        console.rgb["bg"][x, y] = color.white
+        console.rgb["fg"][x, y] = color.black
 
     def ev_keydown(self, event: tcod.event.KeyDown) -> Optional[Action]:
         """Check for key movement or confrimation keys."""
         key = event.sym
         if key in MOVE_KEYS:
             modifier = 1  # Holding modifier keys will speed up key movement
-            if event.mod & (tcod.event.KMOD_LSHIFT | tcod.event.KMOD_RSHIFT):
+            if event.mod & (
+                    tcod.event.Modifier.LSHIFT | tcod.event.Modifier.RSHIFT):
                 modifier *= 5
-            if event.mod & (tcod.event.KMOD_LCTRL | tcod.event.KMOD_RCTRL):
+            if event.mod & (
+                    tcod.event.Modifier.LCTRL | tcod.event.Modifier.RCTRL):
                 modifier *= 10
-            if event.mod & (tcod.event.KMOD_LALT | tcod.event.KMOD_RALT):
+            if event.mod & (
+                    tcod.event.Modifier.LALT | tcod.event.Modifier.RALT):
                 modifier *= 20
 
             x, y = self.engine.mouse_location
@@ -301,6 +304,8 @@ class MainGameEventHandler(EventHandler):
             self.engine.event_handler = InventoryActivateHandler(self.engine)
         elif key == tcod.event.KeySym.D:
             self.engine.event_handler = InventoryDropHandler(self.engine)
+        elif key == tcod.event.KeySym.SLASH:
+            self.engine.event_handler = LookHandler(self.engine)
 
         return action
 
