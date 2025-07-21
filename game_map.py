@@ -1,7 +1,7 @@
 from __future__ import annotations
 from typing import Iterable, Iterator, Optional, TYPE_CHECKING
 
-import numpy as np # type: ignore
+import numpy as np  # type: ignore
 from tcod.console import Console
 
 from entity import Actor
@@ -14,18 +14,25 @@ if TYPE_CHECKING:
 
 class GameMap:
     def __init__(
-            self, engine: Engine, width: int, height: int, entities: Iterable[Entity] = ()
+            self, engine: Engine, width: int, height: int,
+            entities: Iterable[Entity] = ()
     ):
         self.engine = engine
         self.width, self.height = width, height
         self.entities = set(entities)
-        self.tiles = np.full((width, height), fill_value=tile_types.wall, order="F")
+        self.tiles = np.full(
+                (width, height), fill_value=tile_types.wall, order="F"
+        )
         self.visible = np.full(
                 (width, height), fill_value=False, order="F"
-        ) # currently visible tiles
+        )  # currently visible tiles
         self.explored = np.full(
                 (width, height), fill_value=False, order="F"
-        ) # tiles which have been visble in the past
+        )  # tiles which have been visble in the past
+
+    @property
+    def gamemap(self) -> GameMap:
+        return self
 
     @property
     def actors(self) -> Iterator[Actor]:
