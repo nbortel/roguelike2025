@@ -74,8 +74,8 @@ class LightningDamageConsumable(Consumable):
 
         if target:
             self.engine.message_log.add_message(
-                    f"A lightning bolt strikes the {target.name} with a loud\
-                            thunder, for {self.damage} damage!"
+                    f"A lightning bolt strikes the {target.name} with a loud "
+                    f"thunder, for {self.damage} damage!"
             )
             target.fighter.take_damage(self.damage)
             self.consume()
