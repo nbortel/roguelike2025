@@ -184,7 +184,7 @@ class InventoryEventHandler(AskUserEventHandler):
                         "Invalid entry.", color.invalid)
                 return None
             return self.on_item_selected(selected_item)
-        return super.ev_keydown(event)
+        return super().ev_keydown(event)
 
     def on_item_selected(self, item: Item) -> Optional[Action]:
         """Called when the user selects a valid item."""
@@ -230,6 +230,11 @@ class MainGameEventHandler(EventHandler):
             self.engine.event_handler = HistoryViewer(self.engine)
         elif key == tcod.event.KeySym.G:
             action = PickupAction(player)
+
+        elif key == tcod.event.KeySym.I:
+            self.engine.event_handler = InventoryActivateHandler(self.engine)
+        elif key == tcod.event.KeySym.D:
+            self.engine.event_handler = InventoryDropHandler(self.engine)
 
         return action
 
