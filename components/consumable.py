@@ -109,7 +109,7 @@ class FireballDamageConsumable(Consumable):
         )
         return None
 
-    def actiate(self, action: actions.ItemAction) -> None:
+    def activate(self, action: actions.ItemAction) -> None:
         target_xy = action.target_xy
 
         if not self.engine.game_map.visible[target_xy]:
