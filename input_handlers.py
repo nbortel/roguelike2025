@@ -293,6 +293,7 @@ class SingleRangedAttackHandler(SelectIndexHandler):
         self.callback = callback
 
     def on_index_selected(self, x: int, y: int) -> Optional[Action]:
+        self.engine.event_handler = MainGameEventHandler(self.engine)
         return self.callback((x, y))
 
 
@@ -323,6 +324,7 @@ class AreaRangedAttackHandler(SelectIndexHandler):
         )
 
     def on_index_selected(self, x: int, y: int) -> Optional[Action]:
+        self.engine.event_handler = MainGameEventHandler(self.engine)
         return self.callback((x, y))
 
 
