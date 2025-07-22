@@ -120,7 +120,7 @@ class FireballDamageConsumable(Consumable):
             if actor.distance(*target_xy) <= self.radius:
                 self.engine.message_log.add_message(
                         f"The {actor.name} is engulfed in a fiery explosion, "
-                        f"taking {self.damage}"
+                        f"taking {self.damage} damage!"
                 )
                 actor.fighter.take_damage(self.damage)
                 targets_hit = True
