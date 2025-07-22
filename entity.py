@@ -78,6 +78,12 @@ class Entity:
         coordinate. """
         return math.sqrt((x - self.x) ** 2 + (y - self.y) ** 2)
 
+    def c_distance(self, x: int, y: int) -> float:
+        """ Return Chebyshev distance between the entity and the given (x, y)
+        coordinate."""
+        dx, dy = x - self.x, y - self.y
+        return max(abs(dx), abs(dy))
+
     def move(self, dx: int, dy: int) -> None:
         # move the entity by a given amount
         self.x += dx
