@@ -296,7 +296,7 @@ class SingleRangedAttackHandler(SelectIndexHandler):
         return self.callback((x, y))
 
 
-class AreaRangedAttackHanler(SelectIndexHandler):
+class AreaRangedAttackHandler(SelectIndexHandler):
     """Handles target an area within a given radius. Any entity within the area
     will be affected."""
 
