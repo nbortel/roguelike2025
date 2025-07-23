@@ -85,7 +85,7 @@ class BaseEventHandler(tcod.event.EventDispatch[ActionOrHandler]):
         raise SystemExit()
 
 
-class EventHandler (BaseEventHandler):
+class EventHandler(BaseEventHandler):
     def __init__(self, engine: Engine):
         self.engine = engine
 
@@ -109,7 +109,6 @@ class EventHandler (BaseEventHandler):
         """
         if action is None:
             return False
-
         try:
             action.perform()
         except exceptions.Impossible as exc:
@@ -119,6 +118,7 @@ class EventHandler (BaseEventHandler):
         self.engine.handle_enemy_turns()
 
         self.engine.update_fov()
+        return True
 
     def ev_mousemotion(self, event: tcod.event.MouseMotion) -> None:
         if self.engine.game_map.in_bounds(event.tile.x, event.tile.y):
