@@ -16,6 +16,17 @@ def save_game(handler: input_handlers.BaseEventHandler, filename: str) -> None:
         print("Game saved.")
 
 
+def toggle_fullscreen(context: tcod.context.Context) -> None:
+    """Toggle a context window between fullscreen and windowed modes."""
+    window = context.sdl_window
+    if not window:
+        return
+    if window.fullscreen:
+        window.fullscreen = False
+    else:
+        window.fullscreen = tcod.sdl.video.WindowFlags.FULLSCREEN
+
+
 def main() -> None:
     screen_width = 80
     screen_height = 50
@@ -43,7 +54,12 @@ def main() -> None:
                 try:
                     for event in tcod.event.wait():
                         context.convert_event(event)
-                        handler = handler.handle_events(event)
+                        # Allows fullscreen toggle regardless of game context
+                        if (isinstance(event, tcod.event.KeyDown) and
+                                event.sym == tcod.event.KeySym.F11):
+                            toggle_fullscreen(context)
+                        else:
+                            handler = handler.handle_events(event)
                 except Exception:  # Handle exceptions in game
                     traceback.print_exc()  # Print error to stderr
                     # Then print error to message log
