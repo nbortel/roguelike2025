@@ -31,7 +31,7 @@ def main() -> None:
     screen_width = 80
     screen_height = 50
 
-    tileset = tcod.tileset.load_truetype_font("QuinqueFive.ttf", 20, 16)
+    tileset = tcod.tileset.load_truetype_font("QuinqueFive.ttf", 20, 20)
     """ Orignal TCOD tutorial tileset
     tileset = tcod.tileset.load_tilesheet(
         "dejavu10x10_gs_tc.png", 32, 8, tcod.tileset.CHARMAP_TCOD
