@@ -1,4 +1,5 @@
-from components.ai import HostileEnemy
+from actor_groups import ActorGroups
+from components.ai import AlliedFollower, HostileEnemy
 from components import consumable, equippable
 from components.equipment import Equipment
 from components.fighter import Fighter
@@ -11,10 +12,23 @@ player = Actor(
     color=(255, 255, 255),
     name="Player",
     ai_cls=HostileEnemy,
+    group=ActorGroups.ALLIES,
     equipment=Equipment(),
     fighter=Fighter(hp=30, base_defense=1, base_power=2),
     inventory=Inventory(capacity=26),
     level=Level(level_up_base=200),
+)
+
+allied_dummy = Actor(
+    char="d",
+    color=(255, 255, 255),
+    name="Friendly Dummy",
+    group=ActorGroups.ALLIES,
+    ai_cls=AlliedFollower,
+    equipment=Equipment(),
+    fighter=Fighter(hp=15, base_defense=1, base_power=2),
+    inventory=Inventory(capacity=0),
+    level=Level(xp_given=0)
 )
 
 orc = Actor(

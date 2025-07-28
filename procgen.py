@@ -206,4 +206,6 @@ def generate_dungeon(
         # Finally, append the new room to the list.
         rooms.append(new_room)
 
+    entity_factories.allied_dummy.spawn(dungeon, player.x + 1, player.y + 1)
+
     return dungeon

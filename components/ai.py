@@ -5,8 +5,10 @@ from typing import List, Optional, Tuple, TYPE_CHECKING
 
 import numpy as np  # type: ignore
 import tcod
+from tcod.map import compute_fov
 
 from actions import Action, BumpAction, MeleeAction, MovementAction, WaitAction
+from actor_groups import ActorGroups, select_group_from_list
 
 if TYPE_CHECKING:
     from entity import Actor
@@ -47,6 +49,27 @@ class BaseAI(Action):
 
         # Convert from List[List[int]] to List[Tuple[int, int]].
         return [(index[0], index[1]) for index in path]
+
+    def get_actors_in_fov(self, fov_radius: int = 8) -> List[Actor]:
+        actor_list = []
+        fov_mask = compute_fov(
+                self.entity.parent.tiles["transparent"],
+                (self.entity.x, self.entity.y),
+                radius=fov_radius,
+        )
+        iterator = np.nditer(fov_mask, flags=["multi_index"])
+        for value in iterator:
+            if value:
+                x, y = iterator.multi_index
+                actor = self.entity.gamemap.get_actor_at_location(x, y)
+                if actor and actor is not self.entity:
+                    actor_list += [actor]
+        return actor_list
+
+    def get_distance_to_target_actor(self, actor: Actor) -> int:
+        """Calculate chebyshev distance bewteen self and target."""
+        dx, dy = self.entity.x - actor.x, self.entity.y - actor.y
+        return max(abs(dx), abs(dy))
 
 
 class ConfusedEnemy(BaseAI):
@@ -97,16 +120,66 @@ class HostileEnemy(BaseAI):
         self.path: List[Tuple[int, int]] = []
 
     def perform(self) -> None:
-        target = self.engine.player
+        target_list = select_group_from_list(
+                super().get_actors_in_fov(), ActorGroups.ALLIES)
+        closest_target: Actor = None
+        if target_list:
+            closest_target = target_list[0]
+        for target in target_list:
+            if (super().get_distance_to_target_actor(target) <
+                    super().get_distance_to_target_actor(closest_target)):
+                closest_target = target
+        if not closest_target:
+            return WaitAction(self.entity).perform()
+
+        target = closest_target
         dx = target.x - self.entity.x
         dy = target.y - self.entity.y
-        distance = max(abs(dx), abs(dy)) # Chebyshev distance
+        distance = super().get_distance_to_target_actor(target)
 
-        if self.engine.game_map.visible[self.entity.x, self.entity.y]:
-            if distance <= 1:
+        if distance <= 1:
+            return MeleeAction(self.entity, dx, dy).perform()
+
+        self.path = self.get_path_to(target.x, target.y)
+
+        if self.path:
+            dest_x, dest_y = self.path.pop(0)
+            return MovementAction(
+                self.entity, dest_x - self.entity.x, dest_y - self.entity.y,
+            ).perform()
+
+        return WaitAction(self.entity).perform()
+
+
+class AlliedFollower(BaseAI):
+    def __init__(self, entity: Actor):
+        super().__init__(entity)
+        self.path: List[Tuple[int, int]] = []
+
+    def perform(self) -> None:
+        target_list = select_group_from_list(
+                super().get_actors_in_fov(), ActorGroups.ENEMIES)
+        closest_target: Actor = None
+        if target_list:
+            closest_target = target_list[0]
+        for target in target_list:
+            if (super().get_distance_to_target_actor(target) <
+                    super().get_distance_to_target_actor(closest_target)):
+                closest_target = target
+        if not closest_target:
+            target = self.engine.player
+        else:
+            target = closest_target
+
+        dx = target.x - self.entity.x
+        dy = target.y - self.entity.y
+        distance = max(abs(dx), abs(dy))
+
+        if distance <= 1:
+            if target.group == ActorGroups.ENEMIES:
                 return MeleeAction(self.entity, dx, dy).perform()
-
-            self.path = self.get_path_to(target.x, target.y)
+            return WaitAction(self.entity).perform()
+        self.path = self.get_path_to(target.x, target.y)
 
         if self.path:
             dest_x, dest_y = self.path.pop(0)
