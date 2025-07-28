@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import Optional, Tuple, TYPE_CHECKING
 
+from actor_groups import ActorGroups
 import color
 import exceptions
 
@@ -186,9 +187,27 @@ class MovementAction(ActionWithDirection):
         self.entity.move(self.dx, self.dy)
 
 
+class SwapPostitionAction(ActionWithDirection):
+    def perform(self) -> None:
+        dest_x, dest_y = self.dest_xy
+
+        swap_entity = self.entity.gamemap.get_actor_at_location(dest_x, dest_y)
+
+        if swap_entity:
+            self.engine.message_log.add_message(
+                f"{self.entity.name} switches postion with {swap_entity.name}."
+            )
+            swap_entity.move(-self.dx, -self.dy)
+            self.entity.move(self.dx, self.dy)
+        else:
+            raise exceptions.Impossible("No Actor to swap with")
+
+
 class BumpAction(ActionWithDirection):
     def perform(self) -> None:
         if self.target_actor:
+            if self.target_actor.group == self.entity.group:
+                return SwapPostitionAction(self.entity, self.dx, self.dy).perform()
             return MeleeAction(self.entity, self.dx, self.dy).perform()
         else:
             return MovementAction(self.entity, self.dx, self.dy).perform()

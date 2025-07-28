@@ -4,6 +4,7 @@ import copy
 import math
 from typing import Optional, Tuple, Type, TypeVar, TYPE_CHECKING, Union
 
+from actor_groups import ActorGroups
 from render_order import RenderOrder
 
 if TYPE_CHECKING:
@@ -102,6 +103,7 @@ class Actor(Entity):
         char: str = "?",
         color: Tuple[int, int, int] = (255, 255, 255),
         name: str = "<Unnamed>",
+        group: ActorGroups = ActorGroups.ENEMIES,
         ai_cls: Type[BaseAI],
         equipment: Equipment,
         fighter: Fighter,
@@ -117,6 +119,7 @@ class Actor(Entity):
             blocks_movement=True,
             render_order=RenderOrder.ACTOR,
         )
+        self.group = group
 
         self.ai: Optional[BaseAI] = ai_cls(self)
 
