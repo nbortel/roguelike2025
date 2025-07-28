@@ -157,12 +157,27 @@ class AlliedFollower(BaseAI):
         self.path: List[Tuple[int, int]] = []
 
     def perform(self) -> None:
-        target = self.engine.player
+        target_list = select_group_from_list(
+                super().get_actors_in_fov(), ActorGroups.ENEMIES)
+        closest_target: Actor = None
+        if target_list:
+            closest_target = target_list[0]
+        for target in target_list:
+            if (super().get_distance_to_target_actor(target) <
+                    super().get_distance_to_target_actor(closest_target)):
+                closest_target = target
+        if not closest_target:
+            target = self.engine.player
+        else:
+            target = closest_target
+
         dx = target.x - self.entity.x
         dy = target.y - self.entity.y
         distance = max(abs(dx), abs(dy))
 
         if distance <= 1:
+            if target.group == ActorGroups.ENEMIES:
+                return MeleeAction(self.entity, dx, dy).perform()
             return WaitAction(self.entity).perform()
         self.path = self.get_path_to(target.x, target.y)
 

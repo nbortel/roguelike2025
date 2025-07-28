@@ -26,7 +26,7 @@ allied_dummy = Actor(
     group=ActorGroups.ALLIES,
     ai_cls=AlliedFollower,
     equipment=Equipment(),
-    fighter=Fighter(hp=100, base_defense=100, base_power=0),
+    fighter=Fighter(hp=15, base_defense=1, base_power=2),
     inventory=Inventory(capacity=0),
     level=Level(xp_given=0)
 )
