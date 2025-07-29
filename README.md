@@ -60,3 +60,18 @@ of allies as well.
 When the player levels up, they should be able to integrate a part, permenantly 
 increasing their strength. The number of parts they can use to create allies 
 should also increase.
+
+#### Parts
+Three different varieties of part should be sufficient variety for the first 
+build. There will be core, chassis, and utility parts each of which provide 
+status and abilities to the allies which they are attached to.
+
+##### Core
+TODO
+##### Chassis
+TODO
+##### Utility
+TODO
+
+#### Combat and Status
+
