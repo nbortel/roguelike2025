@@ -149,23 +149,29 @@ class MeleeAction(ActionWithDirection):
             print("nothing to attack")
             raise exceptions.Impossible("Nothing to attack.")
 
-        damage = self.entity.fighter.power - target.fighter.defense
+        target_name = target.name  # Save name in case target dies during atk
+        damage = target.fighter.take_damage(self.entity.fighter.attack())
 
-        attack_desc = f"{self.entity.name.capitalize()} attacks {target.name}"
+        attack_desc = f"{self.entity.name.capitalize()} attacks {target_name}"
         if self.entity is self.engine.player:
             attack_color = color.player_atk
         else:
             attack_color = color.enemy_atk
 
-        if damage > 0:
+        if damage and damage > 0:
             self.engine.message_log.add_message(
-                    f"{attack_desc} for {damage} hit points.",
+                    f"{attack_desc} for {damage} hit points."
+                    f"({self.entity.fighter.attack_string})",
                     attack_color
             )
-            target.fighter.hp -= damage
-        else:
+        elif damage:
             self.engine.message_log.add_message(
                     f"{attack_desc} but does no damage.",
+                    attack_color
+            )
+        else:
+            self.engine.message_log.add_message(
+                    f"{attack_desc} but {target_name} dodges the attack!",
                     attack_color
             )
 

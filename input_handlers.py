@@ -210,7 +210,7 @@ class CharacterScreenEventHandler(AskUserEventHandler):
 
         console.draw_frame(
             x=x, y=y,
-            width=width, height=7,
+            width=width, height=9,
             title=self.TITLE,
             clear=True,
             fg=(255, 255, 255),
@@ -238,8 +238,19 @@ class CharacterScreenEventHandler(AskUserEventHandler):
                 x=x+1, y=y+5,
                 string=f"Defense: {self.engine.player.fighter.defense}"
         )
+        console.print(
+                x=x+1, y=y+6,
+                string=f"Avoidance: {self.engine.player.fighter.avoidance}"
+        )
+        console.print(
+                x=x+1, y=y+7,
+                string=(f"Damage: {self.engine.player.fighter.dice_count}d"
+                        f"{self.engine.player.fighter.dice_sides} + "
+                        f"{self.engine.player.fighter.power}")
+        )
 
 
+# TODO: Allow avoidance on level up / Rework level up
 class LevelUpEventHandler(AskUserEventHandler):
     TITLE = "Level Up"
 

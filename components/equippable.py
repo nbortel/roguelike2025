@@ -16,13 +16,19 @@ class Equippable(BaseComponent):
     def __init__(
         self,
         equipment_type: EquipmentType,
+        avoidance_bonus: int = 0,
         power_bonus: int = 0,
         defense_bonus: int = 0,
+        dice_count_bonus: int = 0,
+        dice_sides_bonus: int = 0,
     ):
         self.equipment_type = equipment_type
 
+        self.avoidance_bonus = avoidance_bonus
         self.power_bonus = power_bonus
         self.defense_bonus = defense_bonus
+        self.dice_count_bonus = dice_count_bonus
+        self.dice_sides_bonus = dice_sides_bonus
 
 
 class Dagger(Equippable):

@@ -14,7 +14,9 @@ player = Actor(
     ai_cls=HostileEnemy,
     group=ActorGroups.ALLIES,
     equipment=Equipment(),
-    fighter=Fighter(hp=30, base_defense=1, base_power=2),
+    fighter=Fighter(
+        hp=30, base_avoidance=2, base_defense=1, base_power=2,
+        base_dice_count=1, base_dice_sides=6),
     inventory=Inventory(capacity=26),
     level=Level(level_up_base=200),
 )
@@ -26,7 +28,9 @@ allied_dummy = Actor(
     group=ActorGroups.ALLIES,
     ai_cls=AlliedFollower,
     equipment=Equipment(),
-    fighter=Fighter(hp=15, base_defense=1, base_power=2),
+    fighter=Fighter(
+        hp=15, base_avoidance=0, base_defense=1, base_power=2,
+        base_dice_count=1, base_dice_sides=2),
     inventory=Inventory(capacity=0),
     level=Level(xp_given=0)
 )
@@ -37,7 +41,8 @@ orc = Actor(
     name="Orc",
     ai_cls=HostileEnemy,
     equipment=Equipment(),
-    fighter=Fighter(hp=10, base_defense=0, base_power=3),
+    fighter=Fighter(hp=10, base_avoidance=1, base_defense=0, base_power=1,
+                    base_dice_count=1, base_dice_sides=2),
     inventory=Inventory(capacity=0),
     level=Level(xp_given=35),
 )
@@ -48,7 +53,8 @@ troll = Actor(
     name="Troll",
     ai_cls=HostileEnemy,
     equipment=Equipment(),
-    fighter=Fighter(hp=16, base_defense=1, base_power=4),
+    fighter=Fighter(hp=16, base_avoidance=1, base_defense=1, base_power=4,
+                    base_dice_count=1, base_dice_sides=3),
     inventory=Inventory(capacity=0),
     level=Level(xp_given=100),
 )

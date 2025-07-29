@@ -120,11 +120,22 @@ class FireballDamageConsumable(Consumable):
         targets_hit = False
         for actor in self.engine.game_map.actors:
             if actor.c_distance(*target_xy) <= self.radius:
-                self.engine.message_log.add_message(
-                        f"The {actor.name} is engulfed in a fiery explosion, "
-                        f"taking {self.damage} damage!"
-                )
-                actor.fighter.take_damage(self.damage)
+                damage_taken = actor.fighter.take_damage(self.damage)
+                if damage_taken and damage_taken > 0:
+                    self.engine.message_log.add_message(
+                            f"The {actor.name} is engulfed in a fiery explosion, "
+                            f"taking {self.damage} damage!"
+                    )
+                elif damage_taken and damage_taken == 0:
+                    self.engine.message_log.add_message(
+                            f"The {actor.name} is engulfed in a fiery explosion, "
+                            "but shrugs it off, taking no damage!"
+                    )
+                else:
+                    self.engine.message_log.add_message(
+                            f"The {actor.name} dodges out of the way of the fiery "
+                            "explosion, avoiding damage!"
+                    )
                 targets_hit = True
 
         if not targets_hit:
@@ -152,11 +163,22 @@ class LightningDamageConsumable(Consumable):
                     closest_distance = distance
 
         if target:
-            self.engine.message_log.add_message(
-                    f"A lightning bolt strikes the {target.name} with a loud "
-                    f"thunder, for {self.damage} damage!"
-            )
-            target.fighter.take_damage(self.damage)
+            damage_taken = target.fighter.take_damage(self.damage)
+            if damage_taken and damage_taken > 0:
+                self.engine.message_log.add_message(
+                        f"A lightning bolt strikes the {target.name} with a loud "
+                        f"thunder, for {self.damage} damage!"
+                )
+            elif damage_taken and damage_taken == 0:
+                self.engine.message_log.add_message(
+                        f"A lightning bolt strikes the {target.name} with a loud "
+                        f"thunder, but they shrug it off, taking no damage!"
+                )
+            else:
+                self.engine.message_log.add_message(
+                        f"A lightning bolt strikes with a loud thunder, but the "
+                        f"{target.name} dodges out of the way, avoiding damage!"
+                )
             self.consume()
         else:
             raise Impossible("No enemy is close enough to strike.")

@@ -18,6 +18,18 @@ class Equipment(BaseComponent):
         self.armor = armor
 
     @property
+    def avoidance_bonus(self) -> int:
+        bonus = 0
+
+        if self.weapon is not None and self.weapon.equippable is not None:
+            bonus += self.weapon.equippable.avoidance_bonus
+
+        if self.armor is not None and self.armor.equippable is not None:
+            bonus += self.armor.equippable.avoidance_bonus
+
+        return bonus
+
+    @property
     def defense_bonus(self) -> int:
         bonus = 0
 
@@ -26,6 +38,30 @@ class Equipment(BaseComponent):
 
         if self.armor is not None and self.armor.equippable is not None:
             bonus += self.armor.equippable.defense_bonus
+
+        return bonus
+
+    @property
+    def dice_count_bonus(self) -> int:
+        bonus = 0
+
+        if self.weapon is not None and self.weapon.equippable is not None:
+            bonus += self.weapon.equippable.dice_count_bonus
+
+        if self.armor is not None and self.armor.equippable is not None:
+            bonus += self.armor.equippable.dice_count_bonus
+
+        return bonus
+
+    @property
+    def dice_sides_bonus(self) -> int:
+        bonus = 0
+
+        if self.weapon is not None and self.weapon.equippable is not None:
+            bonus += self.weapon.equippable.dice_sides_bonus
+
+        if self.armor is not None and self.armor.equippable is not None:
+            bonus += self.armor.equippable.dice_sides_bonus
 
         return bonus
 
