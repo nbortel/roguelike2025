@@ -21,6 +21,7 @@ class Equippable(BaseComponent):
         defense_bonus: int = 0,
         dice_count_bonus: int = 0,
         dice_sides_bonus: int = 0,
+        health_bonus: int = 0,
     ):
         self.equipment_type = equipment_type
 
@@ -29,6 +30,7 @@ class Equippable(BaseComponent):
         self.defense_bonus = defense_bonus
         self.dice_count_bonus = dice_count_bonus
         self.dice_sides_bonus = dice_sides_bonus
+        self.health_bonus = health_bonus
 
 
 class Dagger(Equippable):
