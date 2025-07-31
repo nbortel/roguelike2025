@@ -16,7 +16,7 @@ player = Actor(
     equipment=Equipment(),
     fighter=Fighter(
         hp=30, base_avoidance=2, base_defense=1, base_power=2,
-        base_dice_count=1, base_dice_sides=6),
+        base_dice_count=1, base_dice_sides=3),
     inventory=Inventory(capacity=26),
     level=Level(level_up_base=200),
 )
@@ -87,6 +87,7 @@ lightning_scroll = Item(
     consumable=consumable.LightningDamageConsumable(damage=20, maximum_range=5)
 )
 """EQUIPPABLE ITEMS"""
+"""
 dagger = Item(
     char="/", color=(0, 191, 255), name="Dagger", equippable=equippable.Dagger()
 )
@@ -104,6 +105,7 @@ chain_mail = Item(
     char="[", color=(139, 69, 19), name="Chain Mail",
     equippable=equippable.ChainMail()
 )
+"""
 """PART ITEMS"""
 capacitor = Item(
     char="*", color=(150, 0, 150), name="Capacitor",

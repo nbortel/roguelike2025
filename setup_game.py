@@ -49,17 +49,17 @@ def new_game() -> Engine:
             color.welcome_text
     )
 
-    dagger = copy.deepcopy(entity_factories.dagger)
-    leather_armor = copy.deepcopy(entity_factories.leather_armor)
+    armored_plating = copy.deepcopy(entity_factories.armored_plating)
+    thrusters = copy.deepcopy(entity_factories.thrusters)
 
-    dagger.parent = player.inventory
-    leather_armor.parent = player.inventory
+    armored_plating.parent = player.inventory
+    thrusters.parent = player.inventory
 
-    player.inventory.items.append(dagger)
-    player.equipment.toggle_equip(dagger, add_message=False)
+    player.inventory.items.append(armored_plating)
+    player.equipment.toggle_equip(armored_plating, add_message=False)
 
-    player.inventory.items.append(leather_armor)
-    player.equipment.toggle_equip(leather_armor, add_message=False)
+    player.inventory.items.append(thrusters)
+    player.equipment.toggle_equip(thrusters, add_message=False)
 
     return engine
 
