@@ -46,7 +46,7 @@ class Engine:
         self.game_map.render(console)
 
         self.message_log.render(
-                console=console, x=21, y=45, width=40, height=5
+                console=console, x=21, y=42, width=50, height=8
         )
 
         render_functions.render_bar(
@@ -63,7 +63,7 @@ class Engine:
         )
 
         render_functions.render_names_at_location(
-                console=console, x=21, y=44, engine=self)
+                console=console, x=21, y=41, engine=self)
 
     def save_as(self, filename: str) -> None:
         """Save this Engine instance as a compressed file."""
