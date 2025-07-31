@@ -206,6 +206,11 @@ def generate_dungeon(
         # Finally, append the new room to the list.
         rooms.append(new_room)
 
+    # Spawn Test Entities Here
     entity_factories.allied_dummy.spawn(dungeon, player.x + 1, player.y + 1)
+    entity_factories.capacitor.spawn(dungeon, player.x - 1, player.y - 1)
+    entity_factories.armored_plating.spawn(dungeon, player.x - 1, player.y - 1)
+    entity_factories.thrusters.spawn(dungeon, player.x - 1, player.y - 1)
+    entity_factories.servos.spawn(dungeon, player.x - 1, player.y - 1)
 
     return dungeon

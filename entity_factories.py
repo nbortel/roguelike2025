@@ -1,6 +1,6 @@
 from actor_groups import ActorGroups
 from components.ai import AlliedFollower, HostileEnemy
-from components import consumable, equippable
+from components import consumable, equippable, part
 from components.equipment import Equipment
 from components.fighter import Fighter
 from components.inventory import Inventory
@@ -20,7 +20,7 @@ player = Actor(
     inventory=Inventory(capacity=26),
     level=Level(level_up_base=200),
 )
-
+"""ACTORS"""
 allied_dummy = Actor(
     char="d",
     color=(255, 255, 255),
@@ -58,7 +58,7 @@ troll = Actor(
     inventory=Inventory(capacity=0),
     level=Level(xp_given=100),
 )
-
+"""CONSUMABLE ITEMS"""
 confusion_scroll = Item(
     char="~",
     color=(207, 63, 255),
@@ -86,7 +86,7 @@ lightning_scroll = Item(
     name="Lightning Scroll",
     consumable=consumable.LightningDamageConsumable(damage=20, maximum_range=5)
 )
-
+"""EQUIPPABLE ITEMS"""
 dagger = Item(
     char="/", color=(0, 191, 255), name="Dagger", equippable=equippable.Dagger()
 )
@@ -103,4 +103,21 @@ leather_armor = Item(
 chain_mail = Item(
     char="[", color=(139, 69, 19), name="Chain Mail",
     equippable=equippable.ChainMail()
+)
+"""PART ITEMS"""
+capacitor = Item(
+    char="*", color=(150, 0, 150), name="Capacitor",
+    equippable=part.Capacitor()
+)
+armored_plating = Item(
+    char="*", color=(150, 0, 150), name="Armored Plating",
+    equippable=part.ArmoredPlating()
+)
+thrusters = Item(
+    char="*", color=(150, 0, 150), name="Thrusters",
+    equippable=part.Thrusters()
+)
+servos = Item(
+    char="*", color=(150, 0, 150), name="Servos",
+    equippable=part.Servos()
 )

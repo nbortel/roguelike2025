@@ -13,9 +13,11 @@ class Equipment(BaseComponent):
     parent: Actor
 
     def __init__(
-            self, weapon: Optional[Item] = None, armor: Optional[Item] = None):
+            self, weapon: Optional[Item] = None, armor: Optional[Item] = None,
+            part: Optional[Item] = None):
         self.weapon = weapon
         self.armor = armor
+        self.part = part
 
     @property
     def avoidance_bonus(self) -> int:
@@ -26,6 +28,9 @@ class Equipment(BaseComponent):
 
         if self.armor is not None and self.armor.equippable is not None:
             bonus += self.armor.equippable.avoidance_bonus
+
+        if self.part is not None and self.part.equippable is not None:
+            bonus += self.part.equippable.avoidance_bonus
 
         return bonus
 
@@ -39,6 +44,9 @@ class Equipment(BaseComponent):
         if self.armor is not None and self.armor.equippable is not None:
             bonus += self.armor.equippable.defense_bonus
 
+        if self.part is not None and self.part.equippable is not None:
+            bonus += self.part.equippable.defense_bonus
+
         return bonus
 
     @property
@@ -50,6 +58,9 @@ class Equipment(BaseComponent):
 
         if self.armor is not None and self.armor.equippable is not None:
             bonus += self.armor.equippable.dice_count_bonus
+
+        if self.part is not None and self.part.equippable is not None:
+            bonus += self.part.equippable.dice_count_bonus
 
         return bonus
 
@@ -63,6 +74,9 @@ class Equipment(BaseComponent):
         if self.armor is not None and self.armor.equippable is not None:
             bonus += self.armor.equippable.dice_sides_bonus
 
+        if self.part is not None and self.part.equippable is not None:
+            bonus += self.part.equippable.dice_sides_bonus
+
         return bonus
 
     @property
@@ -75,10 +89,13 @@ class Equipment(BaseComponent):
         if self.armor is not None and self.armor.equippable is not None:
             bonus += self.armor.equippable.defense_bonus
 
+        if self.part is not None and self.part.equippable is not None:
+            bonus += self.part.equippable.power_bonus
+
         return bonus
 
     def item_is_equipped(self, item: Item) -> bool:
-        return self.weapon == item or self.armor == item
+        return self.weapon == item or self.armor == item or self.part == item
 
     def unequip_message(self, item_name: str) -> None:
         self.parent.gamemap.engine.message_log.add_message(
@@ -98,6 +115,10 @@ class Equipment(BaseComponent):
 
         setattr(self, slot, item)
 
+        # Add bonus health if the item conveys it
+        if item.equippable.health_bonus > 0:
+            self.parent.fighter.max_hp += item.equippable.health_bonus
+
         if add_message:
             self.equip_message(item.name)
 
@@ -106,6 +127,10 @@ class Equipment(BaseComponent):
 
         if add_message:
             self.unequip_message(current_item.name)
+
+        # Remove health bonus if item was conveying it
+        if current_item.equippable.health_bonus > 0:
+            self.parent.fighter.max_hp -= current_item.equippable.health_bonus
 
         setattr(self, slot, None)
 
@@ -116,6 +141,8 @@ class Equipment(BaseComponent):
             and equippable_item.equippable.equipment_type == EquipmentType.WEAPON
         ):
             slot = "weapon"
+        elif equippable_item.equippable.equipment_type == EquipmentType.PART:
+            slot = "part"
         else:
             slot = "armor"
 
