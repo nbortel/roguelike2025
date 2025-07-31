@@ -66,8 +66,7 @@ class ConfusionConsumable(Consumable):
             raise Impossible("You cannot confuse yourself!")
 
         self.engine.message_log.add_message(
-                f"The eyes of the {target.name} look vacant, as it starts"
-                " to stumble around!",
+                f"{target.name} starts to stumble around in confusion!",
                 color.status_effect_applied
         )
         target.ai = components.ai.ConfusedEnemy(
