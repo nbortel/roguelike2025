@@ -75,6 +75,8 @@ class GameMap:
 
     def render(self, console: Console) -> None:
         """
+        NOT IN USE - See Camera Class instead
+
         Renders the map
 
         If a tile is in the "visible" array, then draw it with the "light: colors.
