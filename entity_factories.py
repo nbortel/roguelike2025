@@ -1,6 +1,6 @@
 from actor_groups import ActorGroups
 from components.ai import AlliedFollower, HostileEnemy
-from components import consumable, equippable, part
+from components import consumable, part
 from components.equipment import Equipment
 from components.fighter import Fighter
 from components.inventory import Inventory
@@ -59,13 +59,14 @@ troll = Actor(
     level=Level(xp_given=100),
 )
 """CONSUMABLE ITEMS"""
-confusion_scroll = Item(
+scrambler = Item(
     char="~",
     color=(207, 63, 255),
-    name="Confusion Scroll",
+    name="Scrambler",
     consumable=consumable.ConfusionConsumable(number_of_turns=10),
 )
 
+# TODO: Reflavor
 fireball_scroll = Item(
     char="~",
     color=(255, 0, 0),
@@ -73,6 +74,7 @@ fireball_scroll = Item(
     consumable=consumable.FireballDamageConsumable(damage=12, radius=3),
 )
 
+# TODO: Reflavor
 health_potion = Item(
     char="!",
     color=(127, 0, 255),
@@ -80,32 +82,13 @@ health_potion = Item(
     consumable=consumable.HealingConsumable(amount=4),
 )
 
+# TODO: Reflavor
 lightning_scroll = Item(
     char="~",
     color=(255, 255, 0),
     name="Lightning Scroll",
     consumable=consumable.LightningDamageConsumable(damage=20, maximum_range=5)
 )
-"""EQUIPPABLE ITEMS"""
-"""
-dagger = Item(
-    char="/", color=(0, 191, 255), name="Dagger", equippable=equippable.Dagger()
-)
-
-sword = Item(
-    char="/", color=(0, 191, 255), name="Sword", equippable=equippable.Sword()
-)
-
-leather_armor = Item(
-    char="[", color=(139, 69, 19), name="Leather Armor",
-    equippable=equippable.LeatherArmor()
-)
-
-chain_mail = Item(
-    char="[", color=(139, 69, 19), name="Chain Mail",
-    equippable=equippable.ChainMail()
-)
-"""
 """PART ITEMS"""
 capacitor = Item(
     char="*", color=(150, 0, 150), name="Capacitor",
