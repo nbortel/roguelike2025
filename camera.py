@@ -18,13 +18,12 @@ class Camera:
     related functionality.
     """
 
-    parent: Engine
-
     def __init__(
-            self,
+            self, engine: Engine,
             position: Tuple[int, int] = (0, 0),
             width: int = 60, height: int = 40
     ):
+        self.engine = engine
         self.width = width
         self.height = height
         self._position = position
@@ -33,7 +32,7 @@ class Camera:
 
     @property
     def gamemap(self) -> Optional[GameMap]:
-        return self.parent.game_map
+        return self.engine.game_map
 
     @property
     def position(self) -> Tuple[int, int]:
@@ -54,42 +53,58 @@ class Camera:
 
         self._position = (new_x, new_y)
 
-    def render(self):
+    def render(self, dx: int = 0, dy: int = 0):
         """Renders a subset of the game map defined by position, width, and
-        to the Camera's console."""
-        # Ranges for the subset of gamemap we want to capture
-        slice_x = (self.position[0], self.position[0] + self.width)
-        slice_y = (self.position[1], self.position[1] + self.height)
+        to the Camera's console. Additionally render entities within the
+        camera area."""
+        if dx == 0 and dy == 0:  # update the entire viewport if no delta
+            # Ranges for the subset of gamemap we want to capture
+            slice_x = (self.position[0], self.position[0] + self.width)
+            slice_y = (self.position[1], self.position[1] + self.height)
 
-        # Copy the subset of the gamemap arrays indicated by slices
-        visible = self.gamemap.visible[slice_x[0]:slice_x[1],
-                                       slice_y[0]:slice_y[1]].copy()
-        explored = self.gamemap.explored[slice_x[0]:slice_x[1],
-                                         slice_y[0]:slice_y[1]].copy()
-        tiles = self.gamemap.tiles[slice_x[0]:slice_x[1],
-                                   slice_y[0]:slice_y[1]].copy()
-
-        self.console.rgb[0:self.width, 0:self.height] = np.select(
-                condlist=[visible, explored],
-                choicelist=[tiles["light"], tiles["dark"]],
-                default=tile_types.SHROUD
-        )
+            self.console.rgb[0:self.width, 0:self.height] = np.select(
+                    condlist=[
+                        self.gamemap.visible[
+                            slice_x[0]:slice_x[1], slice_y[0]:slice_y[1]],
+                        self.gamemap.explored[
+                            slice_x[0]:slice_x[1], slice_y[0]:slice_y[1]],
+                    ],
+                    choicelist=[
+                        self.gamemap.tiles[
+                            slice_x[0]:slice_x[1],
+                            slice_y[0]:slice_y[1]]["light"],
+                        self.gamemap.tiles[
+                            slice_x[0]:slice_x[1],
+                            slice_y[0]:slice_y[1]]["dark"],
+                    ],
+                    default=tile_types.SHROUD
+            )
+        else:
+            if dx > 0:  # TODO: Finish this!
+                self.console.rgb = np.delete(self.console.rgb, range(0, dx), axis=1)
+                pass
+            elif dx < 0:
+                pass
+            if dy > 0:
+                pass
+            elif dy < 0:
+                pass
 
         entities_sorted_for_rendering = sorted(
             self.gamemap.entities, key=lambda x: x.render_order.value
         )
 
         for entity in entities_sorted_for_rendering:
-            entity_adjust_x = entity.x - self.position[0]
-            entity_adjust_y = entity.y - self.position[1]
+            entity_camera_x = entity.x - self.position[0]
+            entity_camera_y = entity.y - self.position[1]
             # Skip entities that are outside the camera
-            if (entity_adjust_x < 0 or entity_adjust_y < 0
-                    or entity_adjust_x > self.width - 1
-                    or entity_adjust_y > self.height - 1):
+            if (entity_camera_x < 0 or entity_camera_y < 0
+                    or entity_camera_x > self.width - 1
+                    or entity_camera_y > self.height - 1):
                 continue
             # Only print entities that are in the FOV
-            if visible[entity_adjust_x, entity_adjust_y]:
+            if self.gamemap.visible[entity.x, entity.y]:
                 self.console.print(
-                    x=entity_adjust_x, y=entity_adjust_y,
+                    x=entity_camera_x, y=entity_camera_y,
                     string=entity.char, fg=entity.color
                 )
