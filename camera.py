@@ -27,7 +27,7 @@ class Camera:
     ):
         self.width = width
         self.height = height
-        self.position = position
+        self._position = position
         self.console = tcod.console.Console(
                 width=width, height=height, order='F')
 
@@ -35,9 +35,14 @@ class Camera:
     def gamemap(self) -> Optional[GameMap]:
         return self.parent.game_map
 
-    def move_camera(self, value: Tuple[int, int]):
-        new_x = value[0]
-        new_y = value[1]
+    @property
+    def position(self) -> Tuple[int, int]:
+        return self._position
+
+    @position.setter
+    def position(self, new_position: Tuple[int, int]):
+        new_x = new_position[0]
+        new_y = new_position[1]
         if new_x < 0:
             new_x = 0
         elif new_x + self.width >= self.gamemap.width:
@@ -47,7 +52,7 @@ class Camera:
         elif new_y + self.height >= self.gamemap.height:
             new_y = self.gamemap.height - self.height
 
-        self.position = (new_x, new_y)
+        self._position = (new_x, new_y)
 
     def render(self):
         """Renders a subset of the game map defined by position, width, and

@@ -56,7 +56,7 @@ class Engine:
                 self.game_map.height - self.camera.height,
                 max(0, self.player.y - int(self.camera.height / 2))
         )
-        self.camera.move_camera((camera_position_x, camera_position_y))
+        self.camera.position = (camera_position_x, camera_position_y)
         self.camera.render()
         self.camera.console.blit(console)
 
