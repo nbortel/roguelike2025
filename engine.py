@@ -60,6 +60,9 @@ class Engine:
         self.camera.render()
         self.camera.console.blit(console)
 
+        render_functions.render_debug_info(
+                x=60, y=0, console=console, engine=self)
+
         self.message_log.render(
                 console=console, x=21, y=42, width=50, height=8
         )

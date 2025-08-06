@@ -61,3 +61,16 @@ def render_names_at_location(
     )
 
     console.print(x=x, y=y, string=names_at_mouse_location)
+
+
+def render_debug_info(
+        x: int, y: int, console: Console, engine: Engine
+) -> None:
+    player_position = (engine.player.x, engine.player.y)
+    position_string = (
+            f"position: {player_position[0]}, {player_position[1]}"
+    )
+    console.print(x=x, y=y, string=position_string)
+    camera_position = engine.camera.position
+    camera_string_1 = f"camerapos: {camera_position[0]}, {camera_position[1]}"
+    console.print(x=x, y=y+1, string=camera_string_1)
