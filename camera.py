@@ -6,6 +6,7 @@ import numpy as np
 import tcod
 
 from game_map import GameMap
+import render_functions
 import tile_types
 
 if TYPE_CHECKING:
@@ -29,6 +30,8 @@ class Camera:
         self._position = position
         self.console = tcod.console.Console(
                 width=width, height=height, order='F')
+        self._dx: int = 0
+        self._dy: int = 0
 
     @property
     def gamemap(self) -> Optional[GameMap]:
@@ -51,13 +54,17 @@ class Camera:
         elif new_y + self.height >= self.gamemap.height:
             new_y = self.gamemap.height - self.height
 
+        # self._dx = new_x - self.position[0]
+        # self._dy = new_y - self.position[1]
+
         self._position = (new_x, new_y)
 
-    def render(self, dx: int = 0, dy: int = 0):
+    def render(self):
         """Renders a subset of the game map defined by position, width, and
         to the Camera's console. Additionally render entities within the
         camera area."""
-        if dx == 0 and dy == 0:  # update the entire viewport if no delta
+        print(f"dx: {self._dx}\tdy: {self._dy}")
+        if self._dx == 0 and self._dy == 0:  # update the entire viewport if no delta
             # Ranges for the subset of gamemap we want to capture
             slice_x = (self.position[0], self.position[0] + self.width)
             slice_y = (self.position[1], self.position[1] + self.height)
@@ -80,15 +87,85 @@ class Camera:
                     default=tile_types.SHROUD
             )
         else:
-            if dx > 0:  # TODO: Finish this!
-                self.console.rgb = np.delete(self.console.rgb, range(0, dx), axis=1)
+            if self._dx > 0:  # TODO: Finish this!
+                console_sub_array = np.delete(
+                        self.console.rgb, range(0, self._dx), axis=0
+                )
+                print(
+                        f"x:{np.size(self.console.rgb, axis=0)}\t"
+                        f"y:{np.size(self.console.rgb, axis=1)}")
+                print(
+                        f"x:{np.size(console_sub_array, axis=0)}\t"
+                        f"y:{np.size(console_sub_array, axis=1)}")
+                slice_x = (  # define the size of the slice to be appended
+                        self.position[0] + self.width,
+                        self.position[0] + self.width + self._dx
+                )
+                print(f"xslice: {slice_x[0]}:{slice_x[1]}")
+                slice_array = np.select(
+                    condlist=[
+                        self.gamemap.visible[
+                            slice_x[0]:slice_x[1], 0:self.height
+                        ],
+                        self.gamemap.explored[
+                            slice_x[0]:slice_x[1], 0:self.height
+                        ]
+                    ],
+                    choicelist=[
+                        self.gamemap.tiles[
+                            slice_x[0]:slice_x[1], 0:self.height
+                        ]["light"],
+                        self.gamemap.tiles[
+                            slice_x[0]:slice_x[1], 0:self.height
+                        ]["dark"],
+                    ],
+                    default=tile_types.SHROUD
+                )
+                print(
+                        f"x:{np.size(slice_array, axis=0)}\t"
+                        f"y:{np.size(slice_array, axis=1)}")
+                new_console_array = np.concatenate(
+                        (console_sub_array, slice_array),
+                        axis=0
+                )
+                print(
+                        f"x:{np.size(new_console_array, axis=0)}\t"
+                        f"y:{np.size(new_console_array, axis=1)}")
+                self.console.rgb[0:self.width, 0:self.height] = (
+                        np.concatenate((
+                            console_sub_array,
+                            np.select(
+                                condlist=[
+                                    self.gamemap.visible[
+                                        slice_x[0]:slice_x[1], 0:self.height
+                                    ],
+                                    self.gamemap.explored[
+                                        slice_x[0]:slice_x[1], 0:self.height
+                                    ]
+                                ],
+                                choicelist=[
+                                    self.gamemap.tiles[
+                                        slice_x[0]:slice_x[1], 0:self.height
+                                    ]["light"],
+                                    self.gamemap.tiles[
+                                        slice_x[0]:slice_x[1], 0:self.height
+                                    ]["dark"],
+                                ],
+                                default=tile_types.SHROUD
+                            )),
+                            axis=0,
+                        )
+                )
                 pass
-            elif dx < 0:
+            elif self._dx < 0:
                 pass
-            if dy > 0:
+            if self._dy > 0:
                 pass
-            elif dy < 0:
+            elif self._dy < 0:
                 pass
+
+            self._dx = 0
+            self._dy = 0
 
         entities_sorted_for_rendering = sorted(
             self.gamemap.entities, key=lambda x: x.render_order.value
@@ -108,3 +185,6 @@ class Camera:
                     x=entity_camera_x, y=entity_camera_y,
                     string=entity.char, fg=entity.color
                 )
+
+        render_functions.render_debug_info(
+                x=0, y=0, console=self.console, engine=self.engine)
